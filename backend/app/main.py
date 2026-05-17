@@ -34,9 +34,24 @@ app.include_router(auth.router)
 app.include_router(agent_mgmt.router)
 
 
+def run_migrations():
+    """Apply any missing schema changes to existing SQLite DB."""
+    from .database import engine
+    with engine.connect() as conn:
+        # Add system_prompt column to registered_agents if missing
+        try:
+            conn.execute(__import__("sqlalchemy").text(
+                "ALTER TABLE registered_agents ADD COLUMN system_prompt TEXT"
+            ))
+            conn.commit()
+        except Exception:
+            pass  # Column already exists
+
+
 @app.on_event("startup")
 def on_startup():
     init_db()
+    run_migrations()
     db = SessionLocal()
     try:
         seed_policies(db)
