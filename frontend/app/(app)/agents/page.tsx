@@ -34,7 +34,7 @@ interface Message {
 
 export default function AgentsPage() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-  const [sessionId, setSessionId] = useState<string>(crypto.randomUUID());
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export default function AgentsPage() {
 
   const handleStartSession = (agentType: string) => {
     setSelectedAgent(agentType);
-    setSessionId(crypto.randomUUID());
+    setSessionId(null);
     setMessages([]);
   };
 
@@ -59,7 +59,10 @@ export default function AgentsPage() {
     setLoading(true);
 
     try {
-      const response = await api.executeAgent(selectedAgent, prompt, sessionId);
+      const response = await api.executeAgent(selectedAgent, prompt, sessionId || undefined);
+      if (!sessionId && response.session_id) {
+        setSessionId(response.session_id);
+      }
       const agentMessage: Message = {
         role: "agent",
         content: response.response || "No response",
@@ -116,7 +119,7 @@ export default function AgentsPage() {
           <div className="px-4 py-3 border-b border-gray-700 flex items-center gap-2">
             {selectedAgentInfo && <selectedAgentInfo.icon className="w-4 h-4 text-emerald-400" />}
             <span className="text-white text-sm font-medium">{selectedAgentInfo?.name}</span>
-            <span className="text-gray-500 text-xs ml-auto">Session: {sessionId.slice(0, 8)}</span>
+            <span className="text-gray-500 text-xs ml-auto">Session: {sessionId ? sessionId.slice(0, 8) : "Starting..."}</span>
           </div>
 
           {/* Messages */}

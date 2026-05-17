@@ -12,6 +12,7 @@ import {
   PlusCircle,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -68,6 +69,18 @@ export default function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Logout */}
+      <button
+        onClick={() => {
+          localStorage.removeItem("aegis_token");
+          window.location.href = "/login";
+        }}
+        className="flex items-center gap-3 px-3 py-2.5 mx-2 rounded-lg text-sm font-medium text-gray-400 hover:text-red-400 hover:bg-gray-800/50 transition-colors"
+      >
+        <LogOut size={18} />
+        {!collapsed && "Sign Out"}
+      </button>
 
       {/* Collapse toggle */}
       <button

@@ -38,7 +38,7 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem("token", data.access_token || data.token);
+      localStorage.setItem("aegis_token", data.access_token || data.token);
       router.push("/dashboard");
     } catch {
       setError("Network error. Is the backend running?");

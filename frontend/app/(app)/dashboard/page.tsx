@@ -213,7 +213,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
             <Shield className="w-7 h-7 text-emerald-400" />
-            AgentGuard Dashboard
+            Aegis Dashboard
           </h1>
           <p className="text-gray-400 text-sm mt-1">
             Real-time AI agent security monitoring
